@@ -28,25 +28,25 @@ variable "vpc_enable_dns_hostnames" {
   default = true
 }
 
-variable "subnet1_cidr_block" {
-  type = string
-  description = "CIDR Block for Subnet 1 in VPC"
-  default = "10.0.0.0/24"
+variable "subnets_cidr_block" {
+  type = list(string)
+  description = "CIDR Block for Subnets in VPC"
+  default = ["10.0.0.0/24", "10.0.1.0/24"]
 }
 
-variable "subnet1_map_public_ip_on_launch" {
+variable "map_public_ip_on_launch" {
   type = bool
   description = "Map a public IP address for Subnet instances"
   default = true
 }
 
-variable "nginx_port" {
+variable "port" {
   type = number
   description = "Port for NGINX"
   default = 80
 }
 
-variable "nginx_instance_type" {
+variable "instance_type" {
   type = string
   description = "EC2 instance type for NGINX"
   default = "t2.micro"
