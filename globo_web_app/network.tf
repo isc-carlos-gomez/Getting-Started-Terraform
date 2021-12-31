@@ -19,10 +19,10 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.11.0"
 
-  cidr = var.vpc_cidr_block
+  cidr = var.vpc_cidr_block[terraform.workspace]
 
-  azs            = slice(data.aws_availability_zones.available.names, 0, (var.vpc_subnet_count))
-  public_subnets = [for subnet in range(var.vpc_subnet_count) : cidrsubnet(var.vpc_cidr_block, 8, subnet)]
+  azs            = slice(data.aws_availability_zones.available.names, 0, (var.vpc_subnet_count[terraform.workspace]))
+  public_subnets = [for subnet in range(var.vpc_subnet_count[terraform.workspace]) : cidrsubnet(var.vpc_cidr_block[terraform.workspace], 8, subnet)]
 
   enable_nat_gateway = false
   enable_vpn_gateway = false
@@ -43,7 +43,7 @@ resource "aws_security_group" "nginx-sg" {
     from_port   = var.port
     to_port     = var.port
     protocol    = "tcp"
-    cidr_blocks = [var.vpc_cidr_block]
+    cidr_blocks = [var.vpc_cidr_block[terraform.workspace]]
   }
 
   # outbound internet access
@@ -79,5 +79,3 @@ resource "aws_security_group" "alb_sg" {
 
   tags = local.common_tags
 }
-
-
